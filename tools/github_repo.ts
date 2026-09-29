@@ -7,7 +7,11 @@ export const githubRepo = tool({
   inputSchema: z.object({
     repo: z
       .string()
-      .regex(/^[\w.-]+\/[\w.-]+$/, 'Must be in "owner/name" format.')
+      // URL parsing normalizes standalone dot segments out of the request path.
+      .regex(
+        /^(?!\.{1,2}\/)[\w.-]+\/(?!\.{1,2}$)[\w.-]+$/,
+        'Must be in "owner/name" format without dot path segments.'
+      )
       .describe('The repository in "owner/name" format, e.g. "vercel/next.js"'),
   }),
   outputSchema: z.union([
